@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Getting Started with the Official NHL API</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="cell markdown">
+<p>Exploratory use of the official NHL API</p>
+</div>
+<div class="cell code" data-execution_count="20">
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importing libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> <span class="bu">reduce</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> operator <span class="im">import</span> add</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tabulate <span class="im">import</span> tabulate</span></code></pre></div>
+</div>
+<div class="cell markdown">
+<p>After importing the necessary libraries, it's time to define lists to
+be able to group teams by conference and division. And as we know in the
+NHL, there are 32 teams total within 2 conferences with 4 divisions
+between them. Don't forget that the Arizona Coyotes have become the Utah
+Hockey Club!</p>
+</div>
+<div class="cell code" data-execution_count="21">
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating list for team abbreviations, conferences, and divisions</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>TEAM_ABRS <span class="op">=</span> [<span class="st">&quot;BOS&quot;</span>, <span class="st">&quot;BUF&quot;</span>, <span class="st">&quot;DET&quot;</span>, <span class="st">&quot;FLA&quot;</span>, <span class="st">&quot;MTL&quot;</span>, <span class="st">&quot;OTT&quot;</span>, <span class="st">&quot;TBL&quot;</span>, <span class="st">&quot;TOR&quot;</span>, <span class="st">&quot;CAR&quot;</span>, <span class="st">&quot;CBJ&quot;</span>, <span class="st">&quot;NJD&quot;</span>, <span class="st">&quot;NYI&quot;</span>, <span class="st">&quot;NYR&quot;</span>, <span class="st">&quot;PHI&quot;</span>, <span class="st">&quot;PIT&quot;</span>, <span class="st">&quot;WSH&quot;</span>, <span class="st">&quot;UTA&quot;</span>, <span class="st">&quot;CHI&quot;</span>, <span class="st">&quot;COL&quot;</span>, <span class="st">&quot;DAL&quot;</span>, <span class="st">&quot;MIN&quot;</span>, <span class="st">&quot;NSH&quot;</span>, <span class="st">&quot;STL&quot;</span>, <span class="st">&quot;WPG&quot;</span>, <span class="st">&quot;ANA&quot;</span>, <span class="st">&quot;CGY&quot;</span>, <span class="st">&quot;EDM&quot;</span>, <span class="st">&quot;LAK&quot;</span>, <span class="st">&quot;SJS&quot;</span>, <span class="st">&quot;SEA&quot;</span>, <span class="st">&quot;VAN&quot;</span>, <span class="st">&quot;VGK&quot;</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>EASTERN <span class="op">=</span> TEAM_ABRS[:<span class="dv">16</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>WESTERN <span class="op">=</span> TEAM_ABRS[<span class="dv">16</span>:]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ATLANTIC <span class="op">=</span> TEAM_ABRS[:<span class="dv">8</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>METROPOLITAN <span class="op">=</span> TEAM_ABRS[<span class="dv">8</span>:<span class="dv">16</span>]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>CENTRAL <span class="op">=</span> TEAM_ABRS[<span class="dv">16</span>:<span class="dv">24</span>]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>PACIFIC <span class="op">=</span> TEAM_ABRS[<span class="dv">24</span>:]</span></code></pre></div>
+</div>
+<div class="cell markdown">
+<p>Using team abbreviations to create a more comprehensive list
+containing each team's location, name, primary color, and secondary
+color.</p>
+</div>
+<div class="cell code" data-execution_count="22">
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Team Abbreviation: (Location, Team Name, Primary Color, Secondary Color)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>TEAM_INFO <span class="op">=</span> {<span class="st">&quot;BOS&quot;</span>: (<span class="st">&quot;Boston&quot;</span>, <span class="st">&quot;Bruins&quot;</span>, <span class="st">&quot;#FFB81C&quot;</span>, <span class="st">&quot;#000000&quot;</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;BUF&quot;</span>: (<span class="st">&quot;Buffalo&quot;</span>, <span class="st">&quot;Sabres&quot;</span>, <span class="st">&quot;#003087&quot;</span>, <span class="st">&quot;#FFB81C&quot;</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;DET&quot;</span>: (<span class="st">&quot;Detroit&quot;</span>, <span class="st">&quot;Red Wings&quot;</span>, <span class="st">&quot;#CE1126&quot;</span>, <span class="st">&quot;#FFFFFF&quot;</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;FLA&quot;</span>: (<span class="st">&quot;Florida&quot;</span>, <span class="st">&quot;Panthers&quot;</span>, <span class="st">&quot;#041E42&quot;</span>, <span class="st">&quot;#B9975B&quot;</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;MTL&quot;</span>: (<span class="st">&quot;Montreal&quot;</span>, <span class="st">&quot;Canadiens&quot;</span>, <span class="st">&quot;#AF1E2D&quot;</span>, <span class="st">&quot;#192168&quot;</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;OTT&quot;</span>: (<span class="st">&quot;Ottawa&quot;</span>, <span class="st">&quot;Senators&quot;</span>, <span class="st">&quot;#DA1A32&quot;</span>, <span class="st">&quot;#B79257&quot;</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;TBL&quot;</span>: (<span class="st">&quot;Tampa Bay&quot;</span>, <span class="st">&quot;Lightning&quot;</span>, <span class="st">&quot;#002868&quot;</span>, <span class="st">&quot;#FFFFFF&quot;</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;TOR&quot;</span>: (<span class="st">&quot;Toronto&quot;</span>, <span class="st">&quot;Maple Leafs&quot;</span>, <span class="st">&quot;#00205B&quot;</span>, <span class="st">&quot;#FFFFFF&quot;</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;CAR&quot;</span>: (<span class="st">&quot;Carolina&quot;</span>, <span class="st">&quot;Hurricanes&quot;</span>, <span class="st">&quot;#CE1126&quot;</span>, <span class="st">&quot;#000000&quot;</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;CBJ&quot;</span>: (<span class="st">&quot;Columbus&quot;</span>, <span class="st">&quot;Blue Jackets&quot;</span>, <span class="st">&quot;#002654&quot;</span>, <span class="st">&quot;#CE1126&quot;</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;NJD&quot;</span>: (<span class="st">&quot;New Jersey&quot;</span>, <span class="st">&quot;Devils&quot;</span>, <span class="st">&quot;#CE1126&quot;</span>, <span class="st">&quot;#000000&quot;</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;NYI&quot;</span>: (<span class="st">&quot;New York&quot;</span>, <span class="st">&quot;Islanders&quot;</span>, <span class="st">&quot;#00539B&quot;</span>, <span class="st">&quot;#F47D30&quot;</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;NYR&quot;</span>: (<span class="st">&quot;New York&quot;</span>, <span class="st">&quot;Rangers&quot;</span>, <span class="st">&quot;#0038A8&quot;</span>, <span class="st">&quot;#CE1126&quot;</span>),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;PHI&quot;</span>: (<span class="st">&quot;Philadelphia&quot;</span>, <span class="st">&quot;Flyers&quot;</span>, <span class="st">&quot;#F74902&quot;</span>, <span class="st">&quot;#000000&quot;</span>),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;PIT&quot;</span>: (<span class="st">&quot;Pittsburgh&quot;</span>, <span class="st">&quot;Penguins&quot;</span>, <span class="st">&quot;#FCB514&quot;</span>, <span class="st">&quot;#000000&quot;</span>),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;WSH&quot;</span>: (<span class="st">&quot;Washington&quot;</span>, <span class="st">&quot;Capitals&quot;</span>, <span class="st">&quot;#041E42&quot;</span>, <span class="st">&quot;#C8102E&quot;</span>),</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;UTA&quot;</span>: (<span class="st">&quot;Utah&quot;</span>, <span class="st">&quot;Hockey Club&quot;</span>, <span class="st">&quot;#8C2633&quot;</span>, <span class="st">&quot;#E2D6B5&quot;</span>),</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;CHI&quot;</span>: (<span class="st">&quot;Chicago&quot;</span>, <span class="st">&quot;Blackhawks&quot;</span>, <span class="st">&quot;#CF0A2C&quot;</span>, <span class="st">&quot;#FF671B&quot;</span>),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;COL&quot;</span>: (<span class="st">&quot;Colorado&quot;</span>, <span class="st">&quot;Avalanche&quot;</span>, <span class="st">&quot;#6F263D&quot;</span>, <span class="st">&quot;#236192&quot;</span>),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;DAL&quot;</span>: (<span class="st">&quot;Dallas&quot;</span>, <span class="st">&quot;Stars&quot;</span>, <span class="st">&quot;#006847&quot;</span>, <span class="st">&quot;#8F8F8C&quot;</span>),</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;MIN&quot;</span>: (<span class="st">&quot;Minnesota&quot;</span>, <span class="st">&quot;Wild&quot;</span>, <span class="st">&quot;#A6192E&quot;</span>, <span class="st">&quot;#154734&quot;</span>),</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;NSH&quot;</span>: (<span class="st">&quot;Nashville&quot;</span>, <span class="st">&quot;Predators&quot;</span>, <span class="st">&quot;#FFB81C&quot;</span>, <span class="st">&quot;#041E42&quot;</span>),</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;STL&quot;</span>: (<span class="st">&quot;St. Louis&quot;</span>, <span class="st">&quot;Blues&quot;</span>, <span class="st">&quot;#002F87&quot;</span>, <span class="st">&quot;#FCB514&quot;</span>),</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;WPG&quot;</span>: (<span class="st">&quot;Winnipeg&quot;</span>, <span class="st">&quot;Jets&quot;</span>, <span class="st">&quot;#041E42&quot;</span>, <span class="st">&quot;#AC162C&quot;</span>),</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;ANA&quot;</span>: (<span class="st">&quot;Anaheim&quot;</span>, <span class="st">&quot;Ducks&quot;</span>, <span class="st">&quot;#B9975B&quot;</span>, <span class="st">&quot;#F47A38&quot;</span>),</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;CGY&quot;</span>: (<span class="st">&quot;Calgary&quot;</span>, <span class="st">&quot;Flames&quot;</span>, <span class="st">&quot;#D2001C&quot;</span>, <span class="st">&quot;#FAAF19&quot;</span>),</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;EDM&quot;</span>: (<span class="st">&quot;Edmonton&quot;</span>, <span class="st">&quot;Oilers&quot;</span>, <span class="st">&quot;#041E42&quot;</span>, <span class="st">&quot;#FF4C00&quot;</span>),</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;LAK&quot;</span>: (<span class="st">&quot;Los Angeles&quot;</span>, <span class="st">&quot;Kings&quot;</span>, <span class="st">&quot;#111111&quot;</span>, <span class="st">&quot;#A2AAAD&quot;</span>),</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;SJS&quot;</span>: (<span class="st">&quot;San Jose&quot;</span>, <span class="st">&quot;Sharks&quot;</span>, <span class="st">&quot;#006D75&quot;</span>, <span class="st">&quot;#EA7200&quot;</span>),</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;SEA&quot;</span>: (<span class="st">&quot;Seattle&quot;</span>, <span class="st">&quot;Kraken&quot;</span>, <span class="st">&quot;#001628&quot;</span>, <span class="st">&quot;#99D9D9&quot;</span>),</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;VAN&quot;</span>: (<span class="st">&quot;Vancouver&quot;</span>, <span class="st">&quot;Canucks&quot;</span>, <span class="st">&quot;#00205B&quot;</span>, <span class="st">&quot;#041C2C&quot;</span>),</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;VGK&quot;</span>: (<span class="st">&quot;Vegas&quot;</span>, <span class="st">&quot;Golden Knights&quot;</span>, <span class="st">&quot;#B4975A&quot;</span>, <span class="st">&quot;#333F42&quot;</span>)}</span></code></pre></div>
+</div>
+<div class="cell markdown">
+<p>Lastly, we need to define two important functions that will allow us
+to retrieve and view the data from the API. The data we'll need to
+gather is stored in the json file format.</p>
+</div>
+<div class="cell code" data-execution_count="23">
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to get json file from the API</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_json(url):</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span>:</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.get(url, params<span class="op">=</span>{<span class="st">&quot;Content-Type&quot;</span>: <span class="st">&quot;application/json&quot;</span>})</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    response.raise_for_status()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">except</span> requests.exceptions.HTTPError <span class="im">as</span> errh:</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span> (<span class="st">&quot;Http Error:&quot;</span>,errh)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">except</span> requests.exceptions.<span class="pp">ConnectionError</span> <span class="im">as</span> errc:</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span> (<span class="st">&quot;Error Connecting:&quot;</span>,errc)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">except</span> requests.exceptions.Timeout <span class="im">as</span> errt:</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span> (<span class="st">&quot;Timeout Error:&quot;</span>,errt)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">except</span> requests.exceptions.RequestException <span class="im">as</span> err:</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span> (<span class="st">&quot;Oops: Something Else&quot;</span>,err)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  data <span class="op">=</span> response.json()</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> data</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to print json file data in a readable format</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_json(data):</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(json.dumps(data, indent<span class="op">=</span><span class="dv">2</span>))</span></code></pre></div>
+</div>
+<div class="cell markdown">
+<p>Now that that's out of the way, let's see what we can find first from
+exploring the NHL API.</p>
+</div>
+<div class="cell code" data-execution_count="33">
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Query endpoint for retrieving the stats for every goalie that has played so far in the current 2024-2025 NHL season</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>goalie_data <span class="op">=</span> get_json(<span class="st">&quot;https://api.nhle.com/stats/rest/en/goalie/summary?cayenneExp=seasonId=20242025&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Subdiving our code as such will allow us to limit the number of entries printed by our get_json() function</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>goalie_list <span class="op">=</span> goalie_data[<span class="st">&#39;data&#39;</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> goalie <span class="kw">in</span> goalie_list[:<span class="dv">3</span>]:</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    print_json(goalie)</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>{
+  &quot;assists&quot;: 0,
+  &quot;gamesPlayed&quot;: 2,
+  &quot;gamesStarted&quot;: 2,
+  &quot;goalieFullName&quot;: &quot;Arvid Soderblom&quot;,
+  &quot;goals&quot;: 0,
+  &quot;goalsAgainst&quot;: 5,
+  &quot;goalsAgainstAverage&quot;: 2.52348,
+  &quot;lastName&quot;: &quot;Soderblom&quot;,
+  &quot;losses&quot;: 1,
+  &quot;otLosses&quot;: 1,
+  &quot;penaltyMinutes&quot;: 0,
+  &quot;playerId&quot;: 8482821,
+  &quot;points&quot;: 0,
+  &quot;savePct&quot;: 0.91071,
+  &quot;saves&quot;: 51,
+  &quot;seasonId&quot;: 20242025,
+  &quot;shootsCatches&quot;: &quot;L&quot;,
+  &quot;shotsAgainst&quot;: 56,
+  &quot;shutouts&quot;: 0,
+  &quot;teamAbbrevs&quot;: &quot;CHI&quot;,
+  &quot;ties&quot;: null,
+  &quot;timeOnIce&quot;: 7133,
+  &quot;wins&quot;: 0
+}
+{
+  &quot;assists&quot;: 0,
+  &quot;gamesPlayed&quot;: 3,
+  &quot;gamesStarted&quot;: 3,
+  &quot;goalieFullName&quot;: &quot;Joey Daccord&quot;,
+  &quot;goals&quot;: 0,
+  &quot;goalsAgainst&quot;: 8,
+  &quot;goalsAgainstAverage&quot;: 2.59646,
+  &quot;lastName&quot;: &quot;Daccord&quot;,
+  &quot;losses&quot;: 0,
+  &quot;otLosses&quot;: 0,
+  &quot;penaltyMinutes&quot;: 0,
+  &quot;playerId&quot;: 8478916,
+  &quot;points&quot;: 0,
+  &quot;savePct&quot;: 0.91397,
+  &quot;saves&quot;: 85,
+  &quot;seasonId&quot;: 20242025,
+  &quot;shootsCatches&quot;: &quot;L&quot;,
+  &quot;shotsAgainst&quot;: 93,
+  &quot;shutouts&quot;: 0,
+  &quot;teamAbbrevs&quot;: &quot;SEA&quot;,
+  &quot;ties&quot;: null,
+  &quot;timeOnIce&quot;: 11092,
+  &quot;wins&quot;: 3
+}
+{
+  &quot;assists&quot;: 0,
+  &quot;gamesPlayed&quot;: 3,
+  &quot;gamesStarted&quot;: 2,
+  &quot;goalieFullName&quot;: &quot;Cayden Primeau&quot;,
+  &quot;goals&quot;: 0,
+  &quot;goalsAgainst&quot;: 12,
+  &quot;goalsAgainstAverage&quot;: 4.20806,
+  &quot;lastName&quot;: &quot;Primeau&quot;,
+  &quot;losses&quot;: 1,
+  &quot;otLosses&quot;: 1,
+  &quot;penaltyMinutes&quot;: 2,
+  &quot;playerId&quot;: 8480051,
+  &quot;points&quot;: 0,
+  &quot;savePct&quot;: 0.88,
+  &quot;saves&quot;: 88,
+  &quot;seasonId&quot;: 20242025,
+  &quot;shootsCatches&quot;: &quot;L&quot;,
+  &quot;shotsAgainst&quot;: 100,
+  &quot;shutouts&quot;: 0,
+  &quot;teamAbbrevs&quot;: &quot;MTL&quot;,
+  &quot;ties&quot;: null,
+  &quot;timeOnIce&quot;: 10266,
+  &quot;wins&quot;: 0
+}
+</code></pre>
+</div>
+</div>
+<div class="cell markdown">
+<p>As you can see, there's a lot of potential in the data given to us by
+the NHL. Now, to allow further analysis of specific players and games,
+let's collect their respective ids.</p>
+</div>
+<div class="cell code" data-execution_count="25">
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get Game IDs of already played games for the entire 2024-2025 regular season for all teams</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>game_ids <span class="op">=</span> []</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> team <span class="kw">in</span> TEAM_ABRS:</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Query endpoint loop that allows us to retrieve for each team easily</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  data <span class="op">=</span> get_json(<span class="st">&quot;https://api-web.nhle.com/v1/club-schedule-season/&quot;</span> <span class="op">+</span> team <span class="op">+</span><span class="st">&quot;/20242025&quot;</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  filtered_games <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> item: item[<span class="st">&quot;gameType&quot;</span>] <span class="op">==</span> <span class="dv">2</span> <span class="kw">and</span> item[<span class="st">&#39;gameState&#39;</span>] <span class="op">==</span> <span class="st">&#39;OFF&#39;</span>, data[<span class="st">&quot;games&quot;</span>]))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> game <span class="kw">in</span> filtered_games:</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span> <span class="op">=</span> game[<span class="st">&#39;id&#39;</span>]</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">id</span> <span class="kw">not</span> <span class="kw">in</span> game_ids:</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      game_ids.append(<span class="bu">id</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(game_ids))</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>99
+</code></pre>
+</div>
+</div>
+<div class="cell code" data-execution_count="26">
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get Player IDs for all players currently active in the NHL</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>forwards_ids <span class="op">=</span> []</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>defensemen_ids <span class="op">=</span> []</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>goalies_ids <span class="op">=</span> []</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> team <span class="kw">in</span> TEAM_ABRS:</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  data <span class="op">=</span> get_json(<span class="st">&quot;https://api-web.nhle.com/v1/roster/&quot;</span> <span class="op">+</span> team <span class="op">+</span><span class="st">&quot;/20242025&quot;</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  forwards_data <span class="op">=</span> <span class="bu">list</span>(data[<span class="st">&quot;forwards&quot;</span>])</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  defensemen_data <span class="op">=</span> <span class="bu">list</span>(data[<span class="st">&quot;defensemen&quot;</span>])</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  goalies_data <span class="op">=</span> <span class="bu">list</span>(data[<span class="st">&quot;goalies&quot;</span>])</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> forwards <span class="kw">in</span> forwards_data:</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span> <span class="op">=</span> forwards[<span class="st">&#39;id&#39;</span>]</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">id</span> <span class="kw">not</span> <span class="kw">in</span> forwards_ids:</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      forwards_ids.append(<span class="bu">id</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> defensemen <span class="kw">in</span> defensemen_data:</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span> <span class="op">=</span> defensemen[<span class="st">&#39;id&#39;</span>]</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">id</span> <span class="kw">not</span> <span class="kw">in</span> defensemen_ids:</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>      defensemen_ids.append(<span class="bu">id</span>)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> goalies <span class="kw">in</span> goalies_data:</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span> <span class="op">=</span> goalies[<span class="st">&#39;id&#39;</span>]</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">id</span> <span class="kw">not</span> <span class="kw">in</span> goalies_ids:</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>      goalies_ids.append(<span class="bu">id</span>)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>player_ids <span class="op">=</span> forwards_ids <span class="op">+</span> defensemen_ids <span class="op">+</span> goalies_ids</span></code></pre></div>
+</div>
+<div class="cell markdown">
+<p>Time to have some fun exploring some of the data. My favorite team in
+the NHL is the Boston Bruins, which as of writing this, is painful.
+Let's take a look at how their 2024-2025 season has gone thus far.</p>
+</div>
+<div class="cell code" data-execution_count="27">
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter to find 2024-2025 regular season games already played by the Boston Bruins</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> get_json(<span class="st">&quot;https://api-web.nhle.com/v1/club-schedule-season/bos/20242025&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>filtered_games <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> item: item[<span class="st">&quot;gameType&quot;</span>] <span class="op">==</span> <span class="dv">2</span> <span class="kw">and</span> item[<span class="st">&quot;gameState&quot;</span>] <span class="op">==</span> <span class="st">&quot;OFF&quot;</span>, data[<span class="st">&quot;games&quot;</span>]))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dictionary of game outcomes, key = game outcome, value = count</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>game_outcomes <span class="op">=</span> {<span class="st">&#39;REG&#39;</span>:<span class="dv">0</span>, <span class="st">&#39;OT&#39;</span>:<span class="dv">0</span>, <span class="st">&#39;SO&#39;</span>:<span class="dv">0</span>}</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> game <span class="kw">in</span> filtered_games:</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  outcome <span class="op">=</span>  game[<span class="st">&#39;gameOutcome&#39;</span>][<span class="st">&#39;lastPeriodType&#39;</span>]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  game_outcomes.update({outcome: (game_outcomes.get(outcome) <span class="op">+</span> <span class="dv">1</span>)})</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">list</span>(game_outcomes.keys()), <span class="bu">list</span>(game_outcomes.values()), color <span class="op">=</span><span class="st">&#39;#FFB81C&#39;</span>, width <span class="op">=</span> <span class="fl">0.8</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Game Outcomes&quot;</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;No. of games&quot;</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&quot;Boston Bruins Game Outcomes in the 2024-2025 Season&quot;</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_7c8bc1bf73c44bbeb9bd354a9084380d/b7ea006b0cd73b8ebb36f712706891731e243573.png" /></p>
+</div>
+</div>
+<div class="cell markdown">
+<p>What if we wanted to see the actual outcomes for these games? How
+many have they won? How many have they lost? P.s. not as many wins as
+I'd like.</p>
+</div>
+<div class="cell code" data-execution_count="29">
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Collecting the ids for all Boston Bruins goalies</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>bruins_goalies_ids <span class="op">=</span> []</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> team <span class="kw">in</span> TEAM_ABRS:</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  data <span class="op">=</span> get_json(<span class="st">&quot;https://api-web.nhle.com/v1/roster/bos/20242025&quot;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  bruins_goalies_data <span class="op">=</span> <span class="bu">list</span>(data[<span class="st">&quot;goalies&quot;</span>])</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> goalies <span class="kw">in</span> bruins_goalies_data:</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span> <span class="op">=</span> goalies[<span class="st">&#39;id&#39;</span>]</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">id</span> <span class="kw">not</span> <span class="kw">in</span> bruins_goalies_ids:</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      bruins_goalies_ids.append(<span class="bu">id</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>bruins_goalies_ids</span></code></pre></div>
+<div class="output execute_result" data-execution_count="29">
+<pre><code>[8476914, 8480280]</code></pre>
+</div>
+</div>
+<div class="cell markdown">
+<p>By collecting the ids for Boston Bruins goalies, I can easily
+determine which team has won each game against the Bruins.</p>
+</div>
+<div class="cell code" data-execution_count="31">
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter to find 2024-2025 regular season games already played by the Boston Bruins</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> get_json(<span class="st">&quot;https://api-web.nhle.com/v1/club-schedule-season/bos/20242025&quot;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>filtered_games <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> item: item[<span class="st">&quot;gameType&quot;</span>] <span class="op">==</span> <span class="dv">2</span> <span class="kw">and</span> item[<span class="st">&quot;gameState&quot;</span>] <span class="op">==</span> <span class="st">&quot;OFF&quot;</span>, data[<span class="st">&quot;games&quot;</span>]))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dictionary of game outcomes, key = game outcome, value = count</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>game_outcomes <span class="op">=</span> {<span class="st">&#39;WIN&#39;</span>:<span class="dv">0</span>, <span class="st">&#39;LOSS&#39;</span>:<span class="dv">0</span>}</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> game <span class="kw">in</span> filtered_games:</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  winning_goalie <span class="op">=</span>  game[<span class="st">&#39;winningGoalie&#39;</span>][<span class="st">&#39;playerId&#39;</span>]</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> winning_goalie <span class="kw">in</span> bruins_goalies_ids:</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    game_outcomes.update({<span class="st">&#39;WIN&#39;</span>: game_outcomes[<span class="st">&#39;WIN&#39;</span>] <span class="op">+</span> <span class="dv">1</span>})</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span>:</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    game_outcomes.update({<span class="st">&#39;LOSS&#39;</span>: game_outcomes[<span class="st">&#39;LOSS&#39;</span>] <span class="op">+</span> <span class="dv">1</span>})</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">list</span>(game_outcomes.keys()), <span class="bu">list</span>(game_outcomes.values()), color <span class="op">=</span><span class="st">&#39;#FFB81C&#39;</span>, width <span class="op">=</span> <span class="fl">0.8</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Game Outcomes&quot;</span>)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;No. of games&quot;</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&quot;Boston Bruins Game Outcomes in the 2024-2025 Season&quot;</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img
+src="vertopal_7c8bc1bf73c44bbeb9bd354a9084380d/5e59227f12d34c0def2f4695ab39b7db901a3040.png" /></p>
+</div>
+</div>
+<div class="cell markdown">
+<p>As you can see, the Bruins are on pace to win exactly half of their
+games and to lose exactly half of their games... not super
+impressive.</p>
+</div>
+</body>
+</html>
